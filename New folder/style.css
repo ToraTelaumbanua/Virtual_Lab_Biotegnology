@@ -1,0 +1,36 @@
+/* Font kustom untuk tampilan yang lebih lembut */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+body {
+  font-family: "Inter", sans-serif;
+}
+/* Menyembunyikan elemen secara default */
+.hidden {
+  display: none;
+}
+/* Styling untuk tab aktif */
+.tab-button.active {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+}
+/* Style untuk simulator SVG */
+.svg-char-component {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+}
+.svg-char-component.visible {
+  opacity: 1;
+  visibility: visible;
+}
+/* Kontainer untuk figur/gambar simulasi */
+.sim-figure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9fafb; /* gray-50 */
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-height: 300px;
+  overflow: hidden;
+}
