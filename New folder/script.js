@@ -3,16 +3,19 @@ let currentModule = ""; // 'kultur', 'bioplastik', 'bioremediasi'
 let currentTab = "materi"; // 'materi', 'prosedur', 'simulator'
 let kulturSimStep = 0; // Melacak progres simulator kultur
 let bioplastikSimStep = 0; // Melacak progres simulator bioplastik
+let bioremediasiSimStep = 0; // Melacak progres simulator bioremediasi
 
 // === DATABASE KONTEN ===
-// Semua teks dari PDF disimpan di sini
+// (Database konten tetap sama seperti sebelumnya, saya persingkat di sini agar fokus pada perubahan JS)
 const contentStore = {
   kultur: {
     title: "Kultur Jaringan",
     materi: `
                       <h2>Pengertian Kultur Jaringan</h2>
                       <p>Kultur jaringan adalah suatu metode mengisolasi bagian tanaman seperti sekelompok sel atau jaringan (daun, akar, batang, tunas, dan sebagainya) serta membudidayakan dalam lingkungan yang terkendali secara in-vitro dan aseptik sehingga bagian tanaman tersebut dapat beregenerasi menjadi tanaman lengkap.</p>
-                      <p>Dasar dari kultur jaringan adalah totipotensi, yang berarti kemampuan total suatu sel tumbuhan untuk dapat meregenerasi dirinya menjadi individu tanaman utuh jika ditempatkan pada media dan kondisi yang tepat.</p>
+                      <p>Dasar dari kultur jaringan adalah totipotensi, yang berarti kemampuan total suatu sel tumbuhan  untuk  dapat  meregenerasi  dirinya  menjadi  individu  tanaman  utuh  jika ditempatkan  pada  media  dan  kondisi  yang  tepat.  
+                      Dalam  konteks  kultur  jaringan, totipotensi berarti setiap sel tanaman memiliki potensi genetik seperti sel zigot yang mampu memperbanyak diri dan berdiferensiasi untuk membentuk tanaman lengkap. 
+                      Oleh  karena  itu,  teknik  kultur  jaringan  menggunakan  potensi  totipotensi  ini  untuk mengisolasi bagian tanaman (seperti jaringan akar, batang, daun, atau mata tunas) dan menumbuhkannya pada media buatan yang kaya nutrisi dan zat pengatur tumbuh secara aseptik, sehingga bagian tanaman tersebut dapat berkembang dan bergenerasi menjadi tanaman baru yang memiliki sifat seperti induknya.</p>
                       
                       <h3>Syarat Utama Kultur Jaringan</h3>
                       <p>Kultur jaringan memerlukan kondisi aseptik (bebas kontaminasi), media yang mengandung nutrisi lengkap seperti gula, mineral, vitamin, serta hormon tumbuh, dan ruang tumbuh dengan cahaya dan suhu yang terkontrol.</p>
@@ -273,9 +276,6 @@ function showTab(tabName) {
 // === FUNGSI SIMULATOR ===
 
 // --- 1. SIMULATOR KULTUR JARINGAN ---
-
-// Data langkah-langkah untuk simulator Kultur Jaringan
-// Ini adalah versi sederhana dari PDF
 const kulturSimSteps = [
   {
     prompt:
@@ -330,14 +330,8 @@ const kulturSimSteps = [
           btn.classList.add("bg-green-200", "text-green-800", "font-medium");
           btn.innerHTML = `✓ ${btn.innerText}`;
           btn.disabled = true;
-
-          // Tampilkan komponen SVG
           const svgElement = document.getElementById(`svg-${item}`);
-          if (svgElement) {
-            svgElement.classList.add("visible");
-          }
-
-          // Cek apakah semua sudah
+          if (svgElement) svgElement.classList.add("visible");
           if (Object.values(ppeDone).every(Boolean)) {
             document.getElementById("ppe-next").classList.remove("hidden");
           }
@@ -354,18 +348,12 @@ const kulturSimSteps = [
                           <!-- SVG Autoclave -->
                           <svg viewBox="0 0 200 200" class="w-full max-w-[250px] h-auto">
                               <title>Autoclave</title>
-                              <!-- Body -->
                               <rect x="40" y="50" width="120" height="130" rx="10" fill="#d1d5db"/>
-                              <!-- Tutup -->
                               <rect x="30" y="40" width="140" height="20" rx="5" fill="#9ca3af"/>
-                              <!-- Panel -->
                               <rect x="70" y="60" width="60" height="20" fill="#f3f4f6" rx="3"/>
                               <circle cx="100" cy="30" r="10" fill="#4b5563"/>
-                              <!-- Botol di dalam (tersembunyi) -->
                               <rect id="svg-autoclave-bottle" x="80" y="90" width="40" height="60" fill="#e0f2fe" class="svg-char-component" rx="5"/>
-                              <!-- Pintu (tersembunyi) -->
                               <rect id="svg-autoclave-door-open" x="30" y="60" width="10" height="120" fill="#9ca3af" class="svg-char-component" rx="3"/>
-                              <!-- Api/Heat (tersembunyi) -->
                               <path id="svg-autoclave-heat" class="svg-char-component" d="M40 185 Q 60 175, 80 185 T 120 185 T 160 185" stroke="#f97316" fill="none" stroke-width="3"/>
                           </svg>
                       </div>
@@ -410,15 +398,10 @@ const kulturSimSteps = [
                           <!-- SVG LAF -->
                           <svg viewBox="0 0 300 250" class="w-full max-w-[400px] h-auto">
                               <title>Laminar Air Flow</title>
-                              <!-- Box -->
                               <path d="M20 20 L 280 20 L 280 230 L 20 230 Z" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2"/>
-                              <!-- Kaca Depan -->
                               <path d="M20 20 L 280 20 L 280 150 L 20 150 Z" fill="#e0f2fe" opacity="0.6"/>
-                              <!-- Meja Kerja -->
                               <rect x="20" y="150" width="260" height="80" fill="#e5e7eb"/>
-                              <!-- Lampu UV (tersembunyi) -->
                               <rect id="svg-laf-uv" x="50" y="30" width="200" height="15" fill="#a855f7" class="svg-char-component" rx="5"/>
-                              <!-- Bunsen (tersembunyi) -->
                               <g id="svg-laf-bunsen" class="svg-char-component">
                                   <rect x="140" y="130" width="20" height="20" fill="#f59e0b"/>
                                   <path d="M150 130 Q 145 110, 150 90 T 150 130" fill="#f97316"/>
@@ -472,29 +455,24 @@ const kulturSimSteps = [
                            <!-- SVG Inokulasi -->
                            <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                                <title>Proses Inokulasi</title>
-                               <!-- Bunsen -->
                                <g id="svg-inok-bunsen">
                                    <rect x="20" y="130" width="20" height="20" fill="#f59e0b"/>
                                    <path d="M30 130 Q 25 110, 30 90 T 30 130" fill="#f97316"/>
                                </g>
-                               <!-- Petri Dish (Eksplan) -->
                                <g id="svg-inok-petri">
                                    <ellipse cx="100" cy="150" rx="40" ry="15" fill="#e0f2fe"/>
                                    <ellipse cx="100" cy="148" rx="40" ry="15" fill="none" stroke="#0284c7" stroke-width="1"/>
                                    <path d="M90 148 L 95 145 L 100 149" fill="#166534"/> <!-- Eksplan -->
                                </g>
-                               <!-- Botol Media -->
                                <g id="svg-inok-bottle">
                                    <rect x="180" y="100" width="50" height="50" fill="#f0f9ff" rx="5"/>
                                    <rect x="190" y="80" width="30" height="20" fill="#f0f9ff"/>
                                    <rect x="180" y="130" width="50" height="20" fill="#a3e635" opacity="0.7"/> <!-- Media -->
                                </g>
-                               <!-- Pinset (tersembunyi) -->
                                <g id="svg-inok-pinset" class="svg-char-component">
                                    <line x1="40" y1="100" x2="100" y2="140" stroke="#71717a" stroke-width="3"/>
                                    <line x1="45" y1="100" x2="100" y2="145" stroke="#71717a" stroke-width="3"/>
                                </g>
-                               <!-- Eksplan di pinset (tersembunyi) -->
                                <path id="svg-inok-eksplan" class="svg-char-component" d="M90 148 L 95 145 L 100 149" fill="#166534" transform="translate(-50, -45)"/>
                            </svg>
                        </div>
@@ -519,7 +497,6 @@ const kulturSimSteps = [
         if (step === "alat") {
           status.innerText = "Pinset disterilkan di atas api bunsen...";
           pinset.classList.add("visible");
-          // Simulasi gerakan ke api
           pinset.style.transform = "translate(-10px, -10px)";
           setTimeout(() => {
             pinset.style.transform = "none";
@@ -532,8 +509,8 @@ const kulturSimSteps = [
           buttons[1].classList.add("bg-blue-600");
         } else if (step === "eksplan") {
           status.innerText = "Eksplan (daun) diambil dengan pinset steril...";
-          eksplan.classList.add("visible"); // Tampilkan eksplan menempel di pinset (pinset sudah visible)
-          document.getElementById("svg-inok-petri").style.opacity = "0.5"; // Tanda sudah diambil
+          eksplan.classList.add("visible");
+          document.getElementById("svg-inok-petri").style.opacity = "0.5";
 
           buttons[1].disabled = true;
           buttons[1].classList.add("bg-green-600");
@@ -543,14 +520,11 @@ const kulturSimSteps = [
         } else if (step === "tanam") {
           status.innerText =
             "Eksplan dimasukkan ke botol media. Botol ditutup.";
-          // Pindahkan pinset & eksplan ke botol
           pinset.style.transform = "translate(110px, -40px)";
-          eksplan.style.transform = "translate(60px, -85px)"; // Sesuaikan posisi
+          eksplan.style.transform = "translate(60px, -85px)";
 
           setTimeout(() => {
-            // Sembunyikan eksplan (ceritanya sudah di dalam)
             eksplan.classList.remove("visible");
-            // Tanamannya tumbuh sedikit di botol
             const bottle = document.getElementById("svg-inok-bottle");
             bottle.innerHTML +=
               '<path d="M205 130 L 200 120 L 205 110" stroke="#16a34a" stroke-width="2" fill="none"/>';
@@ -579,7 +553,6 @@ const kulturSimSteps = [
                               <rect x="70" y="80" width="60" height="70" fill="#f0f9ff" rx="5"/>
                               <rect x="80" y="60" width="40" height="20" fill="#f0f9ff"/>
                               <rect x="70" y="130" width="60" height="20" fill="#a3e635" opacity="0.7"/> <!-- Media -->
-                              <!-- Tanaman Tumbuh -->
                               <path d="M100 130 Q 95 100, 100 80" stroke="#16a34a" stroke-width="3" fill="none"/>
                               <path d="M98 100 L 85 95" stroke="#16a34a" stroke-width="2" fill="none"/>
                               <path d="M102 110 L 115 105" stroke="#16a34a" stroke-width="2" fill="none"/>
@@ -593,12 +566,9 @@ const kulturSimSteps = [
     setup: () => {},
   },
 ];
-
-// Fungsi untuk merender langkah simulator Kultur Jaringan saat ini
 function renderKulturStep() {
   const simContent = document.getElementById("content-simulator");
   const stepData = kulturSimSteps[kulturSimStep];
-
   simContent.innerHTML = `
           <div class="mb-6 bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg">
               <p class="font-semibold">PROMPT:</p>
@@ -608,13 +578,8 @@ function renderKulturStep() {
               ${stepData.ui}
           </div>
       `;
-  // Jalankan fungsi setup khusus untuk langkah ini (jika ada)
-  if (stepData.setup) {
-    stepData.setup();
-  }
+  if (stepData.setup) stepData.setup();
 }
-
-// Fungsi untuk lanjut ke langkah simulator berikutnya
 function nextKulturStep() {
   if (kulturSimStep < kulturSimSteps.length - 1) {
     kulturSimStep++;
@@ -623,7 +588,6 @@ function nextKulturStep() {
 }
 
 // --- 2. SIMULATOR BIOPLASTIK ---
-
 const bioplastikSimSteps = [
   {
     prompt:
@@ -678,22 +642,18 @@ const bioplastikSimSteps = [
                       <div class="sim-figure flex-1">
                           <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                               <title>Neraca Digital dan Gelas Piala</title>
-                              <!-- Neraca -->
                               <rect x="20" y="150" width="160" height="30" fill="#e5e7eb" rx="5"/>
                               <rect x="30" y="100" width="140" height="50" fill="#f9fafb" stroke="#9ca3af" rx="5"/>
                               <rect x="40" y="115" width="50" height="20" fill="#374151" rx="2"/>
                               <text id="scale-display" x="65" y="130" font-size="12" fill="lime" font-family="monospace" text-anchor="middle">0.0 g</text>
-                              <!-- Gelas Piala -->
                               <g id="svg-beaker">
                                   <path d="M200 50 L 200 170 L 280 170 L 280 50" fill="#e0f2fe" opacity="0.5" stroke="#0284c7" stroke-width="2"/>
                                   <path d="M198 50 L 282 50" stroke="#0284c7" stroke-width="2" fill="none"/>
-                                  <!-- Isi Beaker (tersembunyi) -->
                                   <rect id="svg-beaker-maizena" x="202" y="140" width="76" height="28" fill="#fefce8" class="svg-char-component" rx="2"/>
                                   <rect id="svg-beaker-gliserol" x="202" y="120" width="76" height="20" fill="#f3f4f6" opacity="0.8" class="svg-char-component" rx="2"/>
                               </g>
                           </svg>
                       </div>
-                      <!-- Tombol Aksi -->
                       <div class="flex-1">
                           <p class="mb-4 text-lg">Klik untuk menimbang:</p>
                           <div class="space-y-3">
@@ -736,24 +696,19 @@ const bioplastikSimSteps = [
       "Tambahkan 60ml Aquades, 3ml Asam Asetat 5%, dan 2-3 tetes Pewarna.",
     ui: `
                   <div class="flex flex-col md:flex-row gap-8 items-center">
-                      <!-- SVG Campuran -->
                       <div class="sim-figure flex-1">
                           <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                               <title>Mencampur Bahan</title>
-                              <!-- Gelas Piala dengan isi -->
                               <g id="svg-beaker-mix">
                                   <path d="M100 20 L 100 180 L 250 180 L 250 20" fill="#e0f2fe" opacity="0.5" stroke="#0284c7" stroke-width="2"/>
                                   <path d="M98 20 L 252 20" stroke="#0284c7" stroke-width="2" fill="none"/>
-                                  <!-- Maizena & Gliserol (dari step sblmnya) -->
                                   <rect x="102" y="150" width="146" height="28" fill="#fefce8" rx="2"/>
                                   <rect x="102" y="130" width="146" height="20" fill="#f3f4f6" opacity="0.8" rx="2"/>
-                                  <!-- Cairan (tersembunyi) -->
                                   <rect id="svg-liquid-aquades" x="102" y="80" width="146" height="50" fill="#93c5fd" class="svg-char-component" rx="2"/>
                                   <rect id="svg-liquid-color" x="102" y="80" width="146" height="98" fill="#4ade80" class="svg-char-component" rx="2"/>
                               </g>
                           </svg>
                       </div>
-                      <!-- Tombol Aksi -->
                       <div class="flex-1">
                           <p class="mb-4 text-lg">Klik untuk menambahkan:</p>
                           <div class="space-y-3">
@@ -800,19 +755,14 @@ const bioplastikSimSteps = [
     ui: `
                   <div class="text-center">
                       <div class="sim-figure mb-6 mx-auto">
-                          <!-- SVG Pemanas -->
                           <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                               <title>Memanaskan Campuran</title>
-                              <!-- Kompor Listrik -->
                               <rect x="50" y="170" width="200" height="20" fill="#4b5563" rx="5"/>
                               <rect id="svg-hotplate" x="70" y="160" width="160" height="10" fill="#9ca3af" rx="3"/>
-                              <!-- Gelas Piala dengan isi -->
                               <g id="svg-beaker-heat">
                                   <path d="M80 30 L 80 160 L 220 160 L 220 30" fill="#e0f2fe" opacity="0.5" stroke="#0284c7" stroke-width="2"/>
                                   <path d="M78 30 L 222 30" stroke="#0284c7" stroke-width="2" fill="none"/>
-                                  <!-- Cairan -->
                                   <rect id="svg-liquid-final" x="82" y="50" width="136" height="108" fill="#4ade80" rx="2"/>
-                                  <!-- Spatula (tersembunyi) -->
                                   <line id="svg-spatula" x1="150" y1="40" x2="150" y2="140" stroke="#71717a" stroke-width="4" class="svg-char-component"/>
                               </g>
                           </svg>
@@ -859,14 +809,10 @@ const bioplastikSimSteps = [
     ui: `
                   <div class="text-center">
                       <div class="sim-figure mb-6 mx-auto">
-                          <!-- SVG Tuang -->
                           <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                               <title>Menuang Bioplastik</title>
-                              <!-- Aluminium Foil -->
                               <rect x="20" y="150" width="260" height="20" fill="#d1d5db" rx="5"/>
-                              <!-- Cairan dituang (tersembunyi) -->
                               <ellipse id="svg-poured-liquid" cx="150" cy="150" rx="80" ry="15" fill="#4ade80" opacity="0.8" class="svg-char-component"/>
-                              <!-- Beaker (menuang) -->
                               <g transform="rotate(30, 150, 100)">
                                   <path d="M100 20 L 100 130 L 200 130 L 200 20" fill="#e0f2fe" opacity="0.5" stroke="#0284c7" stroke-width="2"/>
                                   <rect x="102" y="50" width="96" height="78" fill="#4ade80" opacity="0.8" rx="2"/>
@@ -896,7 +842,6 @@ const bioplastikSimSteps = [
     ui: `
                   <div class="text-center">
                       <div class="sim-figure mb-6 mx-auto">
-                          <!-- SVG Selesai -->
                           <svg viewBox="0 0 300 200" class="w-full max-w-[400px] h-auto">
                               <title>Bioplastik Selesai</title>
                               <rect x="40" y="50" width="220" height="100" fill="#4ade80" opacity="0.9" rx="10" stroke="#166534"/>
@@ -911,11 +856,476 @@ const bioplastikSimSteps = [
     setup: () => {},
   },
 ];
-
-// Fungsi untuk merender langkah simulator Bioplastik
 function renderBioplastikStep() {
   const simContent = document.getElementById("content-simulator");
   const stepData = bioplastikSimSteps[bioplastikSimStep];
+  simContent.innerHTML = `
+          <div class="mb-6 bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg">
+              <p class="font-semibold">PROMPT:</p>
+              <p>${stepData.prompt}</p>
+          </div>
+          <div class="mt-8 p-6 border rounded-lg bg-gray-50 min-h-[300px]">
+              ${stepData.ui}
+          </div>
+      `;
+  if (stepData.setup) stepData.setup();
+}
+function nextBioplastikStep() {
+  if (bioplastikSimStep < bioplastikSimSteps.length - 1) {
+    bioplastikSimStep++;
+    renderBioplastikStep();
+  }
+}
+
+// --- 3. SIMULATOR BIOREMEDIASI (BARU DENGAN TAHAPAN) ---
+
+// Langkah-langkah simulasi Bioremediasi
+const bioremediasiSimSteps = [
+  {
+    // Step 0: APD
+    prompt:
+      "Halo! Siap untuk praktikum bioremediasi? Pertama, gunakan APD. Klik item untuk mengenakannya.",
+    ui: `
+              <div class="flex flex-col md:flex-row gap-8 items-start">
+                  <div class="sim-figure flex-1">
+                      <svg viewBox="0 0 200 280" class="w-full max-w-[250px] h-auto" aria-label="Karakter laboran wanita">
+                          <!-- Base Body (sama seperti kultur) -->
+                          <path d="M100 110 C 60 110, 60 60, 100 60 C 140 60, 140 110, 100 110 Z" fill="#fde6d8"/> <path d="M100 110 C 90 130, 70 140, 70 160 L 70 220 L 130 220 L 130 160 C 130 140, 110 130, 100 110 Z" fill="#e2e8f0"/> <path d="M70 160 L 60 160 L 50 210 L 60 210 L 70 160 Z" fill="#e2e8f0"/> <path d="M130 160 L 140 160 L 150 210 L 140 210 L 130 160 Z" fill="#e2e8f0"/> <path d="M50 210 L 50 220 L 60 220 L 60 210 Z" fill="#fde6d8"/> <path d="M140 210 L 140 220 L 150 220 L 150 210 Z" fill="#fde6d8"/> <ellipse cx="85" cy="85" rx="4" ry="6" fill="#4a2c2a"/> <ellipse cx="115" cy="85" rx="4" ry="6" fill="#4a2c2a"/> <path d="M90 100 C 95 105, 105 105, 110 100" stroke="#4a2c2a" fill="none" stroke-width="2"/> <path d="M100 60 C 70 60, 60 30, 100 20 C 140 30, 130 60, 100 60" fill="#4a2c2a"/>
+                          <!-- APD (Tersembunyi) -->
+                          <path id="svg-br-mask" class="svg-char-component" d="M80 95 L 120 95 L 120 110 L 80 110 Z" fill="#93c5fd"/> <!-- Masker -->
+                          <path id="svg-br-goggles" class="svg-char-component" d="M75 80 C 70 80, 65 85, 65 90 L 95 90 C 95 85, 90 80, 85 80 Z M 125 80 C 130 80, 135 85, 135 90 L 105 90 C 105 85, 110 80, 115 80 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="1.5"/> <!-- Kacamata -->
+                          <path id="svg-br-gloves" class="svg-char-component" d="M50 210 L 50 220 L 60 220 L 60 210 Z M 140 210 L 140 220 L 150 220 L 150 210 Z" fill="#60a5fa"/> <!-- Sarung Tangan -->
+                          <!-- Sepatu (baru) -->
+                          <g id="svg-br-shoes" class="svg-char-component">
+                            <rect x="70" y="210" width="25" height="20" fill="#4b5563" rx="3"/>
+                            <rect x="105" y="210" width="25" height="20" fill="#4b5563" rx="3"/>
+                          </g>
+                      </svg>
+                  </div>
+                  <div class="flex-1">
+                      <p class="mb-4 text-lg">Klik item untuk menggunakannya (sesuai PROMPT):</p>
+                      <div class="space-y-3" id="ppe-list-br">
+                          <button data-item="mask" class="ppe-item-br w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">1. Tekan ikon masker</button>
+                          <button data-item="goggles" class="ppe-item-br w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">2. Tekan ikon kacamata</button>
+                          <button data-item="gloves" class="ppe-item-br w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">3. Tekan ikon sarung tangan</button>
+                          <button data-item="shoes" class="ppe-item-br w-full text-left p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">4. Tekan ikon sepatu</button>
+                      </div>
+                      <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hidden" id="ppe-next-br" onclick="nextBioremediasiStep()">Lanjut</button>
+                  </div>
+              </div>
+          `,
+    setup: () => {
+      let ppeDone = { mask: false, goggles: false, gloves: false, shoes: false };
+      document.querySelectorAll(".ppe-item-br").forEach((btn) => {
+        btn.onclick = () => {
+          const item = btn.dataset.item;
+          ppeDone[item] = true;
+          btn.classList.add("bg-green-200", "text-green-800", "font-medium");
+          btn.disabled = true;
+          const svgEl = document.getElementById(`svg-br-${item}`);
+          if (svgEl) svgEl.classList.add("visible");
+          if (Object.values(ppeDone).every(Boolean)) {
+            document.getElementById("ppe-next-br").classList.remove("hidden");
+          }
+        };
+      });
+    },
+  },
+  {
+    // Step 1: Persiapan Cawan (Aquades + Oli) & Sterilisasi Ose
+    prompt:
+      "PROMPT: Tekan ikon aquades, lalu tabung ukur, dan erlenmeyer (oli). Kemudian sterilkan jarum ose.",
+    ui: `
+              <div class="sim-figure">
+                <svg viewBox="0 0 400 250" class="w-full max-w-[500px] h-auto">
+                    <title>Persiapan Cawan dan Ose</title>
+                    <!-- Aquades -->
+                    <g id="svg-br-aquades" class="cursor-pointer" onclick="runBrStep1('aquades')">
+                        <rect x="20" y="100" width="40" height="100" fill="#a5f3fc" rx="5"/>
+                        <rect x="25" y="80" width="30" height="20" fill="#67e8f9"/>
+                        <text x="40" y="150" font-size="10" text-anchor="middle">Aquades</text>
+                    </g>
+                    <!-- Tabung Ukur -->
+                    <g id="svg-br-beaker" class="cursor-pointer" onclick="runBrStep1('beaker')">
+                        <rect x="80" y="120" width="40" height="80" fill="none" stroke="#9ca3af" stroke-width="2" rx="3"/>
+                        <rect id="svg-br-beaker-fill" x="82" y="140" width="36" height="58" fill="#a5f3fc" class="svg-char-component" rx="2"/>
+                        <text x="100" y="160" font-size="10" text-anchor="middle">Tabung Ukur</text>
+                    </g>
+                    <!-- Cawan Petri -->
+                    <g id="svg-br-petri">
+                        <ellipse cx="180" cy="200" rx="50" ry="20" fill="#e0f2fe" opacity="0.7"/>
+                        <rect id="svg-br-petri-water" x="132" y="182" width="96" height="18" fill="#a5f3fc" class="svg-char-component" rx="9"/>
+                        <rect id="svg-br-petri-oil" x="135" y="180" width="90" height="15" fill="#374151" class="svg-char-component" rx="7"/>
+                        <text x="180" y="235" font-size="10" text-anchor="middle">Cawan Petri</text>
+                    </g>
+                    <!-- Erlenmeyer (Oli) -->
+                    <g id="svg-br-oil" class="cursor-pointer" onclick="runBrStep1('oil')">
+                        <path d="M250 200 L 230 140 L 230 100 L 270 100 L 270 140 Z" fill="#374151" rx="5"/>
+                        <text x="250" y="150" font-size="10" fill="white" text-anchor="middle">Oli</Vtext>
+                    </g>
+                    <!-- Bunsen -->
+                    <g id="svg-br-bunsen">
+                        <rect x="330" y="180" width="30" height="20" fill="#f59e0b"/>
+                        <path id="svg-br-bunsen-flame" d="M345 180 Q 340 160, 345 140 T 345 180" fill="#f97316" class="svg-char-component"/>
+                    </g>
+                    <!-- Jarum Ose -->
+                    <g id="svg-br-ose" class="cursor-pointer" onclick="runBrStep1('ose')">
+                        <line x1="300" y1="100" x2="380" y2="100" stroke="#71717a" stroke-width="3"/>
+                        <circle cx="298" cy="100" r="4" fill="none" stroke="#71717a" stroke-width="2"/>
+                        <rect id="svg-br-ose-bacteria" x="296" y="98" width="4" height="4" fill="yellow" class="svg-char-component"/>
+                    </g>
+                    <!-- Cawan Bakteri -->
+                    <g id="svg-br-bacteria-petri" class="cursor-pointer" onclick="runBrStep1('bacteria')">
+                        <ellipse cx="340" cy="100" rx="30" ry="10" fill="#fef08a" opacity="0.5"/>
+                        <text x="340" y="103" font-size="8" text-anchor="middle">Bakteri</text>
+                    </g>
+                </svg>
+              </div>
+              <p id="br-step1-status" class="text-center text-lg">1. Tekan ikon Aquades.</p>
+              <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hidden" id="br-step1-next" onclick="nextBioremediasiStep()">Lanjut</button>
+            `,
+    setup: () => {
+      let state = {
+        aquades: false,
+        beaker: false,
+        oil: false,
+        ose: false,
+        bacteria: false,
+      };
+      window.runBrStep1 = (item) => {
+        const status = document.getElementById("br-step1-status");
+        if (item === "aquades") {
+          document
+            .getElementById("svg-br-beaker-fill")
+            .classList.add("visible");
+          state.aquades = true;
+          status.innerText = "2. Tekan ikon Tabung Ukur.";
+        } else if (item === "beaker" && state.aquades) {
+          document
+            .getElementById("svg-br-petri-water")
+            .classList.add("visible");
+          state.beaker = true;
+          status.innerText = "3. Tekan ikon Erlenmeyer (Oli).";
+        } else if (item === "oil" && state.beaker) {
+          document.getElementById("svg-br-petri-oil").classList.add("visible");
+          state.oil = true;
+          status.innerText = "4. Tekan ikon Jarum Ose (sterilkan).";
+        } else if (item === "ose" && state.oil) {
+          // Sterilisasi
+          document
+            .getElementById("svg-br-bunsen-flame")
+            .classList.add("visible");
+          document.getElementById("svg-br-ose").style.transform =
+            "translate(10px, 60px)";
+          setTimeout(() => {
+            document.getElementById("svg-br-ose").style.transform = "none";
+            state.ose = true;
+            status.innerText = "5. Tekan ikon Cawan Bakteri.";
+          }, 1000);
+        } else if (item === "bacteria" && state.ose) {
+          // Ambil bakteri
+          document.getElementById("svg-br-ose").style.transform =
+            "translate(-40px, 0px)"; // Gerak ke cawan bakteri
+          setTimeout(() => {
+            document
+              .getElementById("svg-br-ose-bacteria")
+              .classList.add("visible");
+            document.getElementById("svg-br-ose").style.transform = "none";
+            state.bacteria = true;
+            status.innerText = "Selesai! Bakteri telah diambil.";
+            document
+              .getElementById("br-step1-next")
+              .classList.remove("hidden");
+          }, 1000);
+        }
+      };
+    },
+  },
+  {
+    // Step 2: Inokulasi Kertas Saring & Label
+    prompt:
+      "PROMPT: Tekan pinset (ambil kertas saring), lalu jarum ose (oles), jarum ose lagi (sterilkan), kertas saring (masukkan ke oli), dan pena (label).",
+    ui: `
+              <div class="sim-figure">
+                <svg viewBox="0 0 400 250" class="w-full max-w-[500px] h-auto">
+                    <title>Inokulasi Kertas Saring</title>
+                    <!-- Pinset -->
+                    <g id="svg-br-pinset" class="cursor-pointer" onclick="runBrStep2('pinset')">
+                        <line x1="20" y1="50" x2="100" y2="100" stroke="#71717a" stroke-width="3"/>
+                        <line x1="25" y1="50" x2="100" y2="105" stroke="#71717a" stroke-width="3"/>
+                        <rect id="svg-br-filter-paper" x="100" y="95" width="20" height="20" fill="white" stroke="black" stroke-width="1" class="svg-char-component"/>
+                    </g>
+                    <!-- Kertas Saring di Meja -->
+                    <g id="svg-br-filter-stack" class="cursor-pointer" onclick="runBrStep2('pinset')">
+                      <rect x="50" y="200" width="20" height="20" fill="white" stroke="black" stroke-width="1"/>
+                      <rect x="52" y="198" width="20" height="20" fill="white" stroke="black" stroke-width="1"/>
+                      <text x="60" y="235" font-size="10" text-anchor="middle">Kertas Saring</text>
+                    </g>
+                    <!-- Ose (dengan bakteri) -->
+                    <g id="svg-br-ose2" class="cursor-pointer" onclick="runBrStep2('ose')">
+                        <line x1="20" y1="120" x2="100" y2="120" stroke="#71717a" stroke-width="3"/>
+                        <circle cx="18" cy="120" r="4" fill="none" stroke="#71717a" stroke-width="2"/>
+                        <rect id="svg-br-ose-bacteria2" x="16" y="118" width="4" height="4" fill="yellow" class="visible"/>
+                    </g>
+                     <!-- Bunsen -->
+                    <g id="svg-br-bunsen2">
+                        <rect x="150" y="180" width="30" height="20" fill="#f59e0b"/>
+                        <path d="M165 180 Q 160 160, 165 140 T 165 180" fill="#f97316"/>
+                    </g>
+                    <!-- Cawan Oli -->
+                    <g id="svg-br-petri2" class="cursor-pointer" onclick="runBrStep2('paper')">
+                        <ellipse cx="280" cy="200" rx="50" ry="20" fill="#e0f2fe" opacity="0.7"/>
+                        <rect x="232" y="182" width="96" height="18" fill="#a5f3fc" rx="9"/>
+                        <rect x="235" y="180" width="90" height="15" fill="#374151" rx="7"/>
+                        <rect id="svg-br-paper-in-petri" x="270" y="185" width="20" height="15" fill="white" stroke="black" stroke-width="1" class="svg-char-component"/>
+                        <text id="svg-br-petri-label" x="280" y="175" font-size="10" fill="black" class="svg-char-component">Label: OK</text>
+                    </g>
+                    <!-- Pena -->
+                    <g id="svg-br-pen" class="cursor-pointer" onclick="runBrStep2('pen')">
+                        <rect x="350" y="50" width="10" height="50" fill="blue" rx="2"/>
+                        <text x="355" y="110" font-size="10" text-anchor="middle">Pena</text>
+                    </g>
+                </svg>
+              </div>
+              <p id="br-step2-status" class="text-center text-lg">1. Tekan Pinset untuk mengambil Kertas Saring.</p>
+              <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hidden" id="br-step2-next" onclick="nextBioremediasiStep()">Lanjut</button>
+            `,
+    setup: () => {
+      let state = {
+        pinset: false,
+        ose: false,
+        ose_sterile: false,
+        paper: false,
+        pen: false,
+      };
+      window.runBrStep2 = (item) => {
+        const status = document.getElementById("br-step2-status");
+        if (item === "pinset") {
+          document
+            .getElementById("svg-br-filter-paper")
+            .classList.add("visible");
+          document.getElementById("svg-br-filter-stack").style.opacity = "0.3";
+          state.pinset = true;
+          status.innerText = "2. Tekan Jarum Ose untuk mengoles bakteri.";
+        } else if (item === "ose" && state.pinset && !state.ose) {
+          // Oles
+          document.getElementById("svg-br-ose2").style.transform =
+            "translate(80px, -15px)";
+          setTimeout(() => {
+            document
+              .getElementById("svg-br-ose-bacteria2")
+              .classList.remove("visible");
+            document.getElementById("svg-br-ose2").style.transform = "none";
+            state.ose = true;
+            status.innerText = "3. Sterilkan Jarum Ose di Bunsen.";
+          }, 1000);
+        } else if (item === "ose" && state.ose && !state.ose_sterile) {
+          // Sterilkan lagi
+          document.getElementById("svg-br-ose2").style.transform =
+            "translate(140px, 50px)";
+          setTimeout(() => {
+            document.getElementById("svg-br-ose2").style.transform = "none";
+            state.ose_sterile = true;
+            status.innerText =
+              "4. Tekan Kertas Saring (di pinset) untuk memasukkan ke cawan.";
+          }, 1000);
+        } else if (item === "paper" && state.ose_sterile) {
+          // Masukkan kertas ke cawan
+          document.getElementById("svg-br-pinset").style.transform =
+            "translate(170px, 90px)";
+          setTimeout(() => {
+            document
+              .getElementById("svg-br-filter-paper")
+              .classList.remove("visible");
+            document
+              .getElementById("svg-br-paper-in-petri")
+              .classList.add("visible");
+            state.paper = true;
+            status.innerText = "5. Tekan Pena untuk memberi label.";
+          }, 1000);
+        } else if (item === "pen" && state.paper) {
+          document
+            .getElementById("svg-br-petri-label")
+            .classList.add("visible");
+          state.pen = true;
+          status.innerText = "Selesai! Cawan siap dibungkus.";
+          document
+            .getElementById("br-step2-next")
+            .classList.remove("hidden");
+        }
+      };
+    },
+  },
+  {
+    // Step 3: Bungkus & Masuk Inkubator
+    prompt:
+      "PROMPT: Tekan ikon kertas pembungkus, lalu ikon inkubator (buka), dan terakhir cawan petri (masukkan).",
+    ui: `
+              <div class="text-center">
+                <div class="sim-figure mb-6 mx-auto">
+                    <svg viewBox="0 0 400 250" class="w-full max-w-[500px] h-auto">
+                        <title>Inkubasi</title>
+                        <!-- Kertas Pembungkus -->
+                        <g id="svg-br-wrap" class="cursor-pointer" onclick="runBrStep3('wrap')">
+                            <rect x="20" y="180" width="80" height="30" fill="#d1d5db" rx="5"/>
+                            <text x="60" y="200" font-size="10" text-anchor="middle">Bungkus</text>
+                        </g>
+                        <!-- Cawan Petri (berlabel) -->
+                        <g id="svg-br-petri3" class="cursor-pointer" onclick="runBrStep3('petri')">
+                            <ellipse cx="180" cy="200" rx="50" ry="20" fill="#e0f2fe" opacity="0.7"/>
+                            <rect x="135" y="180" width="90" height="15" fill="#374151" rx="7"/>
+                            <rect x="170" y="185" width="20" height="15" fill="white" stroke="black" stroke-width="1"/>
+                            <text x="180" y="175" font-size="10" fill="black">Label: OK</text>
+                            <!-- Bungkus (tersembunyi) -->
+                            <ellipse id="svg-br-petri-wrapped" cx="180" cy="200" rx="50" ry="20" fill="#d1d5db" opacity="0.6" class="svg-char-component"/>
+                        </g>
+                        <!-- Inkubator -->
+                        <g id="svg-br-incubator" class="cursor-pointer" onclick="runBrStep3('incubator')">
+                            <rect x="280" y="100" width="100" height="110" fill="#e5e7eb" rx="5"/>
+                            <rect x="290" y="110" width="80" height="20" fill="#f9fafb" rx="2"/>
+                            <rect id="svg-br-incubator-door" x="270" y="100" width="10" height="110" fill="#9ca3af" rx="2" class="transition-transform duration-500"/>
+                            <rect id="svg-br-petri-in" x="300" y="180" width="60" height="15" fill="#d1d5db" class="svg-char-component" rx="3"/>
+                        </g>
+                    </svg>
+                </div>
+                <p id="br-step3-status" class="text-center text-lg">1. Tekan Kertas Pembungkus.</p>
+                <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold hidden" id="br-step3-next" onclick="nextBioremediasiStep()">Lanjut ke Simulator</button>
+              </div>
+            `,
+    setup: () => {
+      let state = { wrap: false, incubator: false, petri: false };
+      window.runBrStep3 = (item) => {
+        const status = document.getElementById("br-step3-status");
+        if (item === "wrap") {
+          document
+            .getElementById("svg-br-petri-wrapped")
+            .classList.add("visible");
+          state.wrap = true;
+          status.innerText = "2. Tekan Inkubator untuk membukanya.";
+        } else if (item === "incubator" && state.wrap) {
+          document.getElementById("svg-br-incubator-door").style.transform =
+            "translateX(-20px)";
+          state.incubator = true;
+          status.innerText = "3. Tekan Cawan Petri untuk memasukkannya.";
+        } else if (item === "petri" && state.incubator) {
+          document.getElementById("svg-br-petri3").style.opacity = "0";
+          document
+            .getElementById("svg-br-petri-in")
+            .classList.add("visible");
+          document.getElementById("svg-br-incubator-door").style.transform =
+            "none";
+          state.petri = true;
+          status.innerText = "Selesai! Cawan sedang diinkubasi.";
+          document
+            .getElementById("br-step3-next")
+            .classList.remove("hidden");
+        }
+      };
+    },
+  },
+  {
+    // Step 4: Simulator Interaktif (Kode dari respons sebelumnya)
+    prompt:
+      "PROMPT: Atur parameter Waktu, Suhu, dan Kuantitas Bakteri untuk melihat hasilnya. (Sesuai PDF hlm 49)",
+    ui: `
+              <div id="bioremediasi-simulator" class="p-4">
+                  <h3 class="text-2xl font-semibold text-gray-700 text-center mb-6">Simulator Bioremediasi</h3>
+                  
+                  <div class="grid md:grid-cols-3 gap-6 mb-6 p-4 bg-gray-50 rounded-lg border">
+                      
+                      <div>
+                          <label for="slider-waktu" class="block text-lg font-medium text-gray-600">
+                              Waktu Inkubasi: <span id="val-waktu" class="font-bold text-blue-600">10</span> hari
+                          </label>
+                          <input type="range" id="slider-waktu" min="1" max="20" value="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2">
+                          <div class="flex justify-between text-sm text-gray-500 mt-1">
+                              <span>1 hari</span>
+                              <span>(Optimal: 10-14)</span>
+                              <span>20 hari</span>
+                          </div>
+                      </div>
+
+                      <div>
+                          <label for="slider-suhu" class="block text-lg font-medium text-gray-600">
+                              Suhu: <span id="val-suhu" class="font-bold text-blue-600">30</span>°C
+                          </label>
+                          <input type="range" id="slider-suhu" min="10" max="50" value="30" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2">
+                          <div class="flex justify-between text-sm text-gray-500 mt-1">
+                              <span>10°C</span>
+                              <span>(Optimal: 25-35)</span>
+                              <span>50°C</span>
+                          </div>
+                      </div>
+                      
+                      <div>
+                          <label for="slider-bakteri" class="block text-lg font-medium text-gray-600">
+                              Kuantitas Bakteri: <span id="val-bakteri" class="font-bold text-blue-600">50</span>%
+                          </label>
+                          <input type="range" id="slider-bakteri" min="0" max="100" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2">
+                          <div class="flex justify-between text-sm text-gray-500 mt-1">
+                              <span>0%</span>
+                              <span>100%</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="text-center mb-6">
+                      <button id="btn-run-sim" class="bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-blue-700 transition-colors text-lg">
+                          Mulai Simulasi
+                      </button>
+                  </div>
+                  
+                  <div class="grid md:grid-cols-2 gap-6 items-center">
+                      <div class="bg-gray-100 p-4 rounded-lg shadow-inner min-h-[250px] flex flex-col justify-center items-center">
+                          <p class="text-sm text-gray-500 mb-2">Visual Cawan Petri (Limbah Oli)</p>
+                          <div id="petri-dish" class="w-48 h-48 bg-gray-800 bg-opacity-80 rounded-full border-4 border-gray-300 shadow-md transition-all duration-1000 ease-in-out flex items-center justify-center relative overflow-hidden">
+                              <div id="bacteria-visual-container" class="absolute w-full h-full"></div>
+                              <span id="petri-text" class="relative z-10 text-white text-opacity-50 text-sm font-medium">Polusi Berat</span>
+                          </div>
+                      </div>
+                      
+                      <div class="bg-gray-100 p-6 rounded-lg shadow-inner min-h-[250px]">
+                          <h4 class="text-xl font-semibold text-gray-700 mb-3">Hasil Simulasi:</h4>
+                          <p id="sim-result-text" class="text-lg text-gray-600">Atur parameter dan tekan "Mulai Simulasi" untuk melihat hasilnya.</p>
+                      </div>
+                  </div>
+              </div>
+            `,
+    setup: () => {
+      // Panggil fungsi setup untuk listener slider (yang didefinisikan di bawah)
+      setupBioremediasiListeners();
+    },
+  },
+  {
+    // Step 5: Selesai
+    prompt: "Simulasi bioremediasi selesai.",
+    ui: `
+              <div class="text-center">
+                  <div class="sim-figure mb-6 mx-auto">
+                      <svg viewBox="0 0 200 200" class="w-full max-w-[250px] h-auto">
+                          <title>Bioremediasi Selesai</title>
+                          <path d="M50 100 Q100 50, 150 100 T 50 100" fill="#a5f3fc"/>
+                          <path d="M50 100 Q100 150, 150 100 T 50 100" fill="#34d399"/>
+                          <text x="100" y="105" font-size="14" text-anchor="middle" font-weight="600">Lingkungan Bersih</text>
+                      </svg>
+                  </div>
+                  <h3 class="text-2xl font-bold text-green-700">Simulasi Selesai!</h3>
+                  <p class="mt-4 text-lg">Anda telah menyelesaikan simulasi bioremediasi.</p>
+                  <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold" onclick="initSimulator('bioremediasi')">Ulangi Simulator</button>
+              </div>
+          `,
+    setup: () => {},
+  },
+];
+
+// Fungsi untuk merender langkah simulator Bioremediasi
+function renderBioremediasiStep() {
+  const simContent = document.getElementById("content-simulator");
+  // Cek jika step di luar batas (untuk tombol "selesai" di step interaktif)
+  if (bioremediasiSimStep >= bioremediasiSimSteps.length) {
+    bioremediasiSimStep = bioremediasiSimSteps.length - 1; // Kembali ke step "selesai"
+  }
+  const stepData = bioremediasiSimSteps[bioremediasiSimStep];
 
   simContent.innerHTML = `
           <div class="mb-6 bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-r-lg">
@@ -926,21 +1336,189 @@ function renderBioplastikStep() {
               ${stepData.ui}
           </div>
       `;
-  if (stepData.setup) {
-    stepData.setup();
+  if (stepData.setup) stepData.setup();
+}
+
+// Fungsi untuk lanjut ke langkah simulator Bioremediasi
+function nextBioremediasiStep() {
+  if (bioremediasiSimStep < bioremediasiSimSteps.length - 1) {
+    bioremediasiSimStep++;
+    renderBioremediasiStep();
   }
 }
 
-// Fungsi untuk lanjut ke langkah simulator Bioplastik berikutnya
-function nextBioplastikStep() {
-  if (bioplastikSimStep < bioplastikSimSteps.length - 1) {
-    bioplastikSimStep++;
-    renderBioplastikStep();
+// --- HELPER UNTUK SIMULATOR INTERAKTIF BIOREMEDIASI ---
+// (Fungsi-fungsi ini dipanggil oleh setup() di langkah terakhir)
+
+let bioremediasiSimState = {
+  suhu: 30,
+  waktu: 10,
+  bakteri: 50,
+};
+
+function setupBioremediasiListeners() {
+  const sliderSuhu = document.getElementById("slider-suhu");
+  const valSuhu = document.getElementById("val-suhu");
+  const sliderWaktu = document.getElementById("slider-waktu");
+  const valWaktu = document.getElementById("val-waktu");
+  const sliderBakteri = document.getElementById("slider-bakteri");
+  const valBakteri = document.getElementById("val-bakteri");
+  const btnRunSim = document.getElementById("btn-run-sim");
+
+  // Inisialisasi nilai awal
+  if (valSuhu) {
+    valSuhu.textContent = bioremediasiSimState.suhu;
+    sliderSuhu.value = bioremediasiSimState.suhu;
+  }
+  if (valWaktu) {
+    valWaktu.textContent = bioremediasiSimState.waktu;
+    sliderWaktu.value = bioremediasiSimState.waktu;
+  }
+  if (valBakteri) {
+    valBakteri.textContent = bioremediasiSimState.bakteri;
+    sliderBakteri.value = bioremediasiSimState.bakteri;
+  }
+
+  if (sliderSuhu) {
+    sliderSuhu.addEventListener("input", (e) => {
+      const value = parseInt(e.target.value, 10);
+      valSuhu.textContent = value;
+      bioremediasiSimState.suhu = value;
+    });
+  }
+
+  if (sliderWaktu) {
+    sliderWaktu.addEventListener("input", (e) => {
+      const value = parseInt(e.target.value, 10);
+      valWaktu.textContent = value;
+      bioremediasiSimState.waktu = value;
+    });
+  }
+
+  if (sliderBakteri) {
+    sliderBakteri.addEventListener("input", (e) => {
+      const value = parseInt(e.target.value, 10);
+      valBakteri.textContent = value;
+      bioremediasiSimState.bakteri = value;
+    });
+  }
+
+  if (btnRunSim) {
+    btnRunSim.addEventListener("click", runBioremediasiSim);
+  }
+
+  // Tambahkan tombol Selesai untuk lanjut ke step "Thank You"
+  const simContainer = document.getElementById("bioremediasi-simulator");
+  if (simContainer) {
+    const nextButton = document.createElement("button");
+    nextButton.innerText = "Selesai Simulasi →";
+    nextButton.className =
+      "mt-6 bg-green-600 text-white py-2 px-6 rounded-lg font-semibold";
+    nextButton.onclick = nextBioremediasiStep;
+    simContainer.appendChild(nextButton);
   }
 }
 
-// --- 3. SIMULATOR BIOREMEDIASI ---
-// (Akan ditambahkan nanti)
+function runBioremediasiSim() {
+  const { suhu, waktu, bakteri } = bioremediasiSimState;
+  const resultText = document.getElementById("sim-result-text");
+  const petriDish = document.getElementById("petri-dish");
+  const petriText = document.getElementById("petri-text");
+  const bacteriaContainer = document.getElementById("bacteria-visual-container");
+
+  // 1. Hitung Efektivitas
+  // Efektivitas Suhu (Optimal 25-35°C, sesuai PDF)
+  let efektivitasSuhu = 0;
+  if (suhu >= 25 && suhu <= 35) {
+    efektivitasSuhu = 1.0; // Optimal
+  } else if (suhu >= 20 && suhu < 25) {
+    efektivitasSuhu = 0.7; // Cukup baik
+  } else if (suhu > 35 && suhu <= 40) {
+    efektivitasSuhu = 0.8; // Masih cukup baik
+  } else {
+    efektivitasSuhu = 0.2; // Terlalu dingin atau panas
+  }
+
+  // Efektivitas Waktu (Optimal 10-14 hari, sesuai PDF)
+  let efektivitasWaktu = 0;
+  if (waktu >= 10 && waktu <= 14) {
+    efektivitasWaktu = 1.0; // Optimal
+  } else if (waktu >= 7 && waktu < 10) {
+    efektivitasWaktu = 0.8; // Cukup
+  } else if (waktu > 14 && waktu <= 20) {
+    efektivitasWaktu = 0.9; // Masih berjalan
+  } else {
+    efektivitasWaktu = 0.4; // Terlalu singkat
+  }
+
+  // Efektivitas Kuantitas Bakteri (Proporsional)
+  let efektivitasBakteri = bakteri / 100;
+  if (bakteri < 30) {
+    efektivitasBakteri = efektivitasBakteri * 0.5; // Kurang efektif jika bibit sedikit
+  }
+
+  let efektivitasTotal =
+    efektivitasSuhu * efektivitasWaktu * efektivitasBakteri * 100;
+
+  // 2. Update Visual (Warna Cawan Petri)
+  const polusiOpacity = 80 - efektivitasTotal * 0.7; // 80% (kotor) -> 10% (jernih)
+  if (petriDish) {
+    petriDish.style.backgroundColor = `rgba(55, 65, 81, ${
+      polusiOpacity / 100
+    })`; // bg-gray-700
+  }
+
+  // 3. Update Visual (Bakteri)
+  if (bacteriaContainer) {
+    bacteriaContainer.innerHTML = "";
+    const jumlahBakteriVisual = Math.round(efektivitasTotal * 1.5);
+    for (let i = 0; i < jumlahBakteriVisual; i++) {
+      const dot = document.createElement("div");
+      dot.className = "absolute w-1 h-1 bg-white rounded-full animate-pulse";
+      dot.style.left = `${Math.random() * 95}%`;
+      dot.style.top = `${Math.random() * 95}%`;
+      dot.style.opacity = `${Math.random() * 0.5 + 0.3}`;
+      bacteriaContainer.appendChild(dot);
+    }
+  }
+
+  // 4. Update Teks Hasil (sesuai PDF)
+  let teksHasil = `Efektivitas Remediasi: <strong>${efektivitasTotal.toFixed(
+    1
+  )}%</strong>. `;
+  if (efektivitasTotal > 85) {
+    teksHasil +=
+      "Hasil Sempurna! ✅ Warna cairan menjernih dan banyak bakteri. (Suhu & Waktu Optimal)";
+    if (petriText) {
+      petriText.textContent = "Jernih";
+      petriText.style.opacity = "0.9";
+    }
+  } else if (efektivitasTotal > 60) {
+    teksHasil +=
+      "Hasil Baik. 👍 Cairan mulai menjernih. Bakteri berkembang baik.";
+    if (petriText) {
+      petriText.textContent = "Cukup Jernih";
+      petriText.style.opacity = "0.8";
+    }
+  } else if (efektivitasTotal > 30) {
+    teksHasil +=
+      "Hasil Cukup. 😐 Cairan masih agak pekat. (Cek Suhu/Waktu).";
+    if (petriText) {
+      petriText.textContent = "Agak Pekat";
+      petriText.style.opacity = "0.7";
+    }
+  } else {
+    teksHasil +=
+      "Hasil Gagal. ❌ Cairan semakin pekat. (Suhu/Waktu tidak optimal).";
+    if (petriText) {
+      petriText.textContent = "Sangat Pekat";
+      petriText.style.opacity = "0.5";
+    }
+  }
+  if (resultText) {
+    resultText.innerHTML = teksHasil;
+  }
+}
 
 // === FUNGSI INISIALISASI SIMULATOR (UTAMA) ===
 function initSimulator(moduleName) {
@@ -952,11 +1530,8 @@ function initSimulator(moduleName) {
     bioplastikSimStep = 0; // Reset langkah
     renderBioplastikStep();
   } else if (moduleName === "bioremediasi") {
-    simContent.innerHTML = `<div class="text-center p-8">
-                  <h3 class="text-2xl font-semibold text-gray-700">Simulator Bioremediasi</h3>
-                  <p class="mt-4 text-lg text-gray-500">Simulator untuk modul ini sedang dalam pengembangan. (Termasuk slider interaktif untuk suhu, waktu, dan kuantitas bakteri seperti di PDF halaman 49).</p>
-                  <img src="https://placehold.co/400x300/ffe4e6/9f1239?text=Coming+Soon" class="rounded-lg shadow-md mt-6 mx-auto">
-              </div>`;
+    bioremediasiSimStep = 0; // Reset langkah
+    renderBioremediasiStep(); // Panggil render step-by-step yang baru
   }
 }
 
