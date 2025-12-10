@@ -1,36 +1,191 @@
-/* Font kustom untuk tampilan yang lebih lembut */
+/* assets/style.css
+   Cleaned and consolidated from the uploaded file.
+   Uses Inter font and plain CSS (no Tailwind @apply so it runs without a build step).
+*/
+
+/* --------------- Fonts & Base --------------- */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-body {
-  font-family: "Inter", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-2: #60a5fa;
+  --surface: #f1f5f9;
+  --radius: 12px;
 }
-/* Menyembunyikan elemen secara default */
-.hidden {
-  display: none;
+
+* { box-sizing: border-box; }
+html,body { height:100%; }
+body{
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: var(--bg);
+  color: #072030;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.45;
+  overflow:hidden; /* keep start-screen centered until dismissed */
 }
-/* Styling untuk tab aktif */
-.tab-button.active {
-  background-color: #2563eb; /* blue-600 */
-  color: white;
+
+/* Utility */
+.hidden { display:none !important; }
+.container { max-width:1100px; margin:0 auto; padding:20px; }
+
+/* ---------------- Start screen styles (updated with concept image) ---------------- */
+#start-screen{
+  position: fixed;
+  inset: 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  /* Your uploaded concept background */
+  background-image: url("start-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  color:#1b1b1b;
+  z-index:1000;
+  transition: opacity .45s ease;
 }
-/* Style untuk simulator SVG */
-.svg-char-component {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease-in-out;
+
+#start-screen::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.3); 
+  backdrop-filter: blur(1px);
 }
-.svg-char-component.visible {
-  opacity: 1;
-  visibility: visible;
+
+.start-content{
+  position:relative;
+  text-align:center;
+  animation: fadeIn 900ms cubic-bezier(.2,.9,.3,1);
+  padding:36px 42px;
 }
-/* Kontainer untuk figur/gambar simulasi */
-.sim-figure {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f9fafb; /* gray-50 */
-  border: 1px solid #e5e7eb; /* gray-200 */
-  border-radius: 0.5rem;
-  padding: 1rem;
-  min-height: 300px;
-  overflow: hidden;
+
+/* Titles to match concept */
+.start-title{
+  font-size:4rem;
+  font-weight:900;
+  font-family: "Fredoka", "Inter", sans-serif;
+  letter-spacing:0.02em;
+  margin:0 0 8px;
+  color:#1b1b1b;
+}
+
+.start-subtitle{
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:24px;
+  color:#111;
+}
+
+.start-button{
+  background-color:#438aff;
+  color:white;
+  border:none;
+  padding:12px 42px;
+  border-radius:999px;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.2s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.start-button:hover{ transform:scale(1.05); }
+
+
+
+/* Animations */
+@keyframes fadeIn { from { opacity:0; transform: translateY(16px);} to { opacity:1; transform:none; } }
+
+/* ---------------- Header / Hub buttons ---------------- */
+.hub-button{
+  background: var(--card);
+  border: 1px solid #e6eef6;
+  padding: 20px;
+  border-radius: 14px;
+  text-align:center;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  cursor:pointer;
+}
+.hub-button:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 18px 50px rgba(2,6,23,0.06);
+  border-color: rgba(96,165,250,0.24);
+}
+.hub-button-icon{ font-size:40px; display:block; margin-bottom:10px; }
+.hub-button-title{ font-weight:700; color: #0b61d1; font-size:20px; margin-bottom:6px; }
+.hub-button-desc{ color: var(--muted); font-size:14px; margin:0; }
+
+/* ---------------- Card area / content area ---------------- */
+.card {
+  background:var(--card);
+  border-radius:14px;
+  padding:18px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+}
+
+.prose { max-width: 100%; color:var(--muted); font-size:15.5px; }
+.prose h2{ color:#07203a; margin-top:0; }
+.prose ul{ margin:8px 0 16px 20px; }
+.prose ol{ margin:8px 0 16px 20px; }
+
+/* ---------------- Pagination UI ---------------- */
+.page-nav { position: absolute; right: 18px; bottom: 18px; display:flex; gap:8px; align-items:center; }
+.page-nav-button {
+  background: var(--accent);
+  color:white;
+  width:40px; height:40px; border-radius:999px;
+  border:none; cursor:pointer; font-weight:800;
+  display:inline-grid; place-items:center;
+}
+.page-nav-button:disabled{ background:#c7d2fe; cursor:default; opacity:0.6; }
+.page-counter { color:var(--muted); font-weight:700; }
+
+/* ---------------- Simulator styles ---------------- */
+.simulator {
+  display:flex; flex-direction:column; gap:12px;
+}
+.sim-figure{
+  display:flex; align-items:center; justify-content:center;
+  background: var(--surface); border-radius:12px; padding:10px;
+  min-height:260px;
+}
+.svg-char-component{ opacity:0; transition: opacity .28s ease, transform .28s ease; }
+.svg-char-component.visible{ opacity:1; transform:none; }
+
+/* Icon buttons used in the simple simulators */
+.icon-btn {
+  display:inline-flex; align-items:center; gap:10px; padding:10px 12px;
+  border-radius:10px; background:#f8fafc; border:1px solid #e6eef6; cursor:pointer;
+}
+.icon-btn:disabled{ opacity:0.5; cursor:not-allowed; }
+
+/* PPE list style */
+.ppe-list{ display:flex; flex-direction:column; gap:8px; }
+.ppe-item{ padding:10px; border-radius:10px; background:#f3f4f6; cursor:pointer; }
+
+/* small helpers */
+.small { font-size:0.95rem; color:var(--muted); }
+.center { text-align:center; }
+
+/* ---------------- Footer ---------------- */
+footer { margin-top:18px; color:var(--muted); font-size:13px; text-align:center; }
+
+/* ---------------- Responsive ---------------- */
+@media (max-width:900px){
+  .container{ padding:14px; }
+  .start-title{ font-size:3rem; }
+  .hub-button{ padding:16px; }
+}
+@media (max-width:640px){
+  .start-title{ font-size:2.4rem; }
+  .hub-button{ padding:14px; }
+  .page-nav{ right:12px; bottom:12px; }
 }
